@@ -53,6 +53,7 @@ Para ver a aplicação rodando abra no navegador https://localhost:5173
 
 ## 🔥 Desafios
 
+- [ ] Deixar as informações do modal de confirmar viagem de forma dinâmica
 - [ ] Criar a função alterar local e data
 - [ ] Criar a função de cadastrar novo link
 - [ ] Criar a função de gerenciar convidados
