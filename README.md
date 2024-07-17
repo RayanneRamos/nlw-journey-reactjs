@@ -58,6 +58,8 @@ Para ver a aplicação rodando abra no navegador https://localhost:5173
 - [ ] Criar a função de cadastrar novo link
 - [ ] Criar a função de gerenciar convidados
 - [ ] Listar os links importantes
+- [ ] Criar o modal de cadastrar link
+- [ ] Criar o modal de gerenciar convidados
 
 ## 📝 License
 
