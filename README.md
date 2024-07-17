@@ -60,6 +60,7 @@ Para ver a aplicação rodando abra no navegador https://localhost:5173
 - [x] Listar os links importantes
 - [x] Criar o modal de cadastrar link
 - [ ] Criar o modal de gerenciar convidados
+- [ ] Copiar para o link para área de transferência
 
 ## 📝 License
 
