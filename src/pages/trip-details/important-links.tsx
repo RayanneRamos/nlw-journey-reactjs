@@ -1,7 +1,19 @@
 import { Link2, Plus } from "lucide-react";
 import { Button } from "../../components/button";
+import { RegisterLinkModal } from "./register-link-modal";
+import { useState } from "react";
 
 export function ImportantLinks() {
+  const [isModalRegisterLink, setIsModalRegisterLink] = useState(false);
+
+  function openModalRegisterLink() {
+    setIsModalRegisterLink(true);
+  }
+
+  function closeModalRegisterLink() {
+    setIsModalRegisterLink(false);
+  }
+
   return (
     <div className="space-y-6">
       <h2 className="font-semibold text-xl">Links importantes</h2>
@@ -35,10 +47,14 @@ export function ImportantLinks() {
           <Link2 className="text-zinc-400 size-5 shrink-0" />
         </div>
       </div>
-      <Button variant="secondary" size="full">
+      <Button variant="secondary" size="full" onClick={openModalRegisterLink}>
         <Plus className="size-5" />
         Cadastrar novo link
       </Button>
+
+      {isModalRegisterLink && (
+        <RegisterLinkModal closeModalRegisterLink={closeModalRegisterLink} />
+      )}
     </div>
   );
 }
