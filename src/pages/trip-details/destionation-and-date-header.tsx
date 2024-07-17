@@ -4,8 +4,10 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { api } from "../../lib/axios";
 import { format } from "date-fns";
+import { ChangePlaceAndDateModal } from "./change-place-and-date-modal";
+import { DateRange } from "react-day-picker";
 
-interface TripProps {
+export interface TripProps {
   id: string;
   destination: string;
   starts_at: string;
@@ -16,6 +18,10 @@ interface TripProps {
 export function DestinationAndDateHeader() {
   const { tripId } = useParams();
   const [trip, setTrip] = useState<TripProps | undefined>();
+  const [changePlaceAndDateModal, setChangePlaceAndDateModal] = useState(false);
+  const [eventStartAndEndDates, setEventStartAndEndDates] = useState<
+    DateRange | undefined
+  >();
 
   useEffect(() => {
     api.get(`/trips/${tripId}`).then((response) => setTrip(response.data.trip));
@@ -26,6 +32,14 @@ export function DestinationAndDateHeader() {
         .concat(" até ")
         .concat(format(trip.ends_at, "d' de 'LLL"))
     : null;
+
+  function openChangePlaceAndDateModal() {
+    setChangePlaceAndDateModal(true);
+  }
+
+  function closeChangePlaceAndDateModal() {
+    setChangePlaceAndDateModal(false);
+  }
 
   return (
     <div className="px-4 h-16 rounded-xl bg-zinc-900 shadow-shape flex items-center justify-between">
@@ -39,11 +53,19 @@ export function DestinationAndDateHeader() {
           <span className="text-zinc-100">{displayedDate}</span>
         </div>
         <div className="w-px h-6 bg-zinc-800" />
-        <Button variant="secondary">
+        <Button variant="secondary" onClick={openChangePlaceAndDateModal}>
           Alterar local/data
           <Settings2 className="size-5" />
         </Button>
       </div>
+
+      {changePlaceAndDateModal && (
+        <ChangePlaceAndDateModal
+          closeChangePlaceAndDateModal={closeChangePlaceAndDateModal}
+          eventStartAndEndDates={eventStartAndEndDates}
+          setEventStartAndEndDates={setEventStartAndEndDates}
+        />
+      )}
     </div>
   );
 }
