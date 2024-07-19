@@ -30,6 +30,10 @@ export function ImportantLinks() {
     setIsModalRegisterLink(false);
   }
 
+  function copyLinkClipboard(url: string) {
+    navigator.clipboard.writeText(url);
+  }
+
   return (
     <div className="space-y-6">
       <h2 className="font-semibold text-xl">Links importantes</h2>
@@ -40,7 +44,7 @@ export function ImportantLinks() {
               className="flex items-center justify-between gap-4"
               key={link.id}
             >
-              <div className="space-y-1.5">
+              <div className="flex-1 space-y-1.5">
                 <span className="block font-medium text-zinc-100">
                   {link.title}
                 </span>
@@ -51,7 +55,12 @@ export function ImportantLinks() {
                   {link.url}
                 </a>
               </div>
-              <Link2 className="text-zinc-400 size-5 shrink-0" />
+              <button
+                className="bg-transparent border-none"
+                onClick={() => copyLinkClipboard(link.url)}
+              >
+                <Link2 className="text-zinc-400 size-5 shrink-0" />
+              </button>
             </div>
           );
         })}
