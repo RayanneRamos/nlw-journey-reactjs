@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { FormEvent, useEffect, useState } from "react";
 import { api } from "../../lib/axios";
 import { ManageGuestsModal } from "./manage-guests-modal";
+import { ConfirmPresenceModal } from "./confirm-presence-modal";
 
 export interface ParticipantsProps {
   id: string;
@@ -17,6 +18,7 @@ export function Guests() {
   const [participants, setParticipants] = useState<ParticipantsProps[]>([]);
   const [confirmPresenceModal, setConfirmPresenceModal] = useState(false);
   const [manageGuestsModal, setManageGuestsModal] = useState(false);
+  const [emailConfirmed, setEmailConfirmed] = useState("");
 
   useEffect(() => {
     api
@@ -24,16 +26,20 @@ export function Guests() {
       .then((response) => setParticipants(response.data.participants));
   }, [tripId]);
 
-  function closeConfirmPresenceModal() {
-    setConfirmPresenceModal(false);
-  }
-
   function openManageGuestsModal() {
     setManageGuestsModal(true);
   }
 
   function closeManageGuestsModal() {
     setManageGuestsModal(false);
+  }
+
+  function openConfirmPresenceModal() {
+    setConfirmPresenceModal(true);
+  }
+
+  function closeConfirmPresenceModal() {
+    setConfirmPresenceModal(false);
   }
 
   async function emailToInviteNewPeople(event: FormEvent<HTMLFormElement>) {
@@ -54,6 +60,33 @@ export function Guests() {
     console.log(emailsToInvite);
 
     setParticipants(emailsToInvite);
+
+    window.location.reload();
+  }
+
+  function getParticipantByEmail(email: string) {
+    const participant = participants.find(
+      (participant) => participant.email === email
+    );
+    return participant?.id;
+  }
+
+  async function confirmParticipantPresence(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const data = new FormData(event.currentTarget);
+    const emailConfirmed = data.get("emailConfirmed")?.toString();
+
+    if (!emailConfirmed) {
+      return;
+    }
+
+    const participantId = getParticipantByEmail(emailConfirmed);
+
+    const response = await api.patch(`/participants/${participantId}/confirm`);
+    const updatedParticipant = response.data;
+
+    setParticipants(updatedParticipant);
 
     window.location.reload();
   }
@@ -79,7 +112,9 @@ export function Guests() {
               {participant.is_confirmed ? (
                 <CheckCircle2 className="text-green-400 size-5 shrink-0" />
               ) : (
-                <CircleDashed className="text-zinc-400 size-5 shrink-0" />
+                <button onClick={openConfirmPresenceModal}>
+                  <CircleDashed className="text-zinc-400 size-5 shrink-0" />
+                </button>
               )}
             </div>
           );
@@ -94,6 +129,15 @@ export function Guests() {
         <ManageGuestsModal
           closeManageGuestsModal={closeManageGuestsModal}
           emailToInviteNewPeople={emailToInviteNewPeople}
+        />
+      )}
+
+      {confirmPresenceModal && (
+        <ConfirmPresenceModal
+          closeConfirmPresenceModal={closeConfirmPresenceModal}
+          confirmParticipantPresence={confirmParticipantPresence}
+          setEmailConfirmed={setEmailConfirmed}
+          emailConfirmed={emailConfirmed}
         />
       )}
     </div>
