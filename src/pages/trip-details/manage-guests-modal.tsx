@@ -1,12 +1,15 @@
 import { AtSign, Plus, X } from "lucide-react";
 import { Button } from "../../components/button";
+import { FormEvent } from "react";
 
 interface ManageGuestsModalProps {
   closeManageGuestsModal: () => void;
+  emailToInviteNewPeople: (event: FormEvent<HTMLFormElement>) => void;
 }
 
 export function ManageGuestsModal({
   closeManageGuestsModal,
+  emailToInviteNewPeople,
 }: ManageGuestsModalProps) {
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
@@ -24,7 +27,10 @@ export function ManageGuestsModal({
           </p>
         </div>
         <div className="w-full h-px bg-zinc-800" />
-        <form className="p-2.5 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2">
+        <form
+          className="p-2.5 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2"
+          onSubmit={emailToInviteNewPeople}
+        >
           <div className="px-2 flex items-center flex-1 gap-2">
             <AtSign className="text-zinc-400 size-5" />
             <input

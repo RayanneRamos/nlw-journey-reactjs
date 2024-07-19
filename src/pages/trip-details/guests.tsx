@@ -1,10 +1,11 @@
 import { CheckCircle2, CircleDashed, UserCog } from "lucide-react";
 import { Button } from "../../components/button";
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { api } from "../../lib/axios";
+import { ManageGuestsModal } from "./manage-guests-modal";
 
-interface ParticipantsProps {
+export interface ParticipantsProps {
   id: string;
   name: string | null;
   email: string;
@@ -14,12 +15,48 @@ interface ParticipantsProps {
 export function Guests() {
   const { tripId } = useParams();
   const [participants, setParticipants] = useState<ParticipantsProps[]>([]);
+  const [confirmPresenceModal, setConfirmPresenceModal] = useState(false);
+  const [manageGuestsModal, setManageGuestsModal] = useState(false);
 
   useEffect(() => {
     api
       .get(`/trips/${tripId}/participants`)
       .then((response) => setParticipants(response.data.participants));
   }, [tripId]);
+
+  function closeConfirmPresenceModal() {
+    setConfirmPresenceModal(false);
+  }
+
+  function openManageGuestsModal() {
+    setManageGuestsModal(true);
+  }
+
+  function closeManageGuestsModal() {
+    setManageGuestsModal(false);
+  }
+
+  async function emailToInviteNewPeople(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const data = new FormData(event.currentTarget);
+    const email = data.get("email")?.toString();
+
+    if (!email) {
+      return;
+    }
+
+    const response = await api.post(`/trips/${tripId}/invites`, {
+      email,
+    });
+    const emailsToInvite = response.data;
+
+    console.log(emailsToInvite);
+
+    setParticipants(emailsToInvite);
+
+    window.location.reload();
+  }
 
   return (
     <div className="space-y-6">
@@ -48,10 +85,17 @@ export function Guests() {
           );
         })}
       </div>
-      <Button variant="secondary" size="full">
+      <Button variant="secondary" size="full" onClick={openManageGuestsModal}>
         <UserCog className="size-5" />
         Gerenciar convidados
       </Button>
+
+      {manageGuestsModal && (
+        <ManageGuestsModal
+          closeManageGuestsModal={closeManageGuestsModal}
+          emailToInviteNewPeople={emailToInviteNewPeople}
+        />
+      )}
     </div>
   );
 }
