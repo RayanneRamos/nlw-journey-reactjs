@@ -56,7 +56,7 @@ Para ver a aplicação rodando abra no navegador https://localhost:5173
 - [x] Deixar as informações do modal de confirmar viagem de forma dinâmica
 - [x] Criar a função alterar local e data
 - [x] Criar a função de cadastrar novo link
-- [ ] Criar a função de gerenciar convidados
+- [x] Criar a função de gerenciar convidados
 - [x] Listar os links importantes
 - [x] Criar o modal de cadastrar link
 - [x] Criar o modal de gerenciar convidados
