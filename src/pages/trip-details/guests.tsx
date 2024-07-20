@@ -61,7 +61,7 @@ export function Guests() {
 
     setParticipants(emailsToInvite);
 
-    window.location.reload();
+    window.document.location.reload();
   }
 
   function getParticipantByEmail(email: string) {
@@ -83,12 +83,12 @@ export function Guests() {
 
     const participantId = getParticipantByEmail(emailConfirmed);
 
-    const response = await api.patch(`/participants/${participantId}/confirm`);
+    const response = await api.get(`/participants/${participantId}/confirm`);
     const updatedParticipant = response.data;
 
     setParticipants(updatedParticipant);
 
-    window.location.reload();
+    window.document.location.reload();
   }
 
   return (

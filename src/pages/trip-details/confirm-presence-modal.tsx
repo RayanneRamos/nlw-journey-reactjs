@@ -47,7 +47,7 @@ export function ConfirmPresenceModal({
               />
             </div>
           </div>
-          <Button size="full" variant="primary">
+          <Button type="submit" size="full" variant="primary">
             Confirmar minha presença
           </Button>
         </form>

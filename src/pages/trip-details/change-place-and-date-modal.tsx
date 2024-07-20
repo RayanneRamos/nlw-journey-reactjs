@@ -42,7 +42,7 @@ export function ChangePlaceAndDateModal({
       ends_at,
     });
 
-    window.location.reload();
+    window.document.location.reload();
   }
 
   const displayedDate =
