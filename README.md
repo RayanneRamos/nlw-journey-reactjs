@@ -62,7 +62,6 @@ Para ver a aplicação rodando abra no navegador https://localhost:5173
 - [x] Criar o modal de gerenciar convidados
 - [x] Criar o modal de alterar local e data
 - [x] Copiar para o link para área de transferência
-- [ ] Validação de formulários
 - [x] Criar a modal de convidar novas pessoas
 - [ ] Criar a função de confirmar presença
 
