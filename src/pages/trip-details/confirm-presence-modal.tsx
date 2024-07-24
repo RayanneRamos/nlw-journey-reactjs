@@ -1,6 +1,10 @@
 import { Mail, X } from "lucide-react";
 import { Button } from "../../components/button";
-import { FormEvent } from "react";
+import { FormEvent, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { api } from "../../lib/axios";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 interface ConfirmPresenceModalProps {
   closeConfirmPresenceModal: () => void;
@@ -9,12 +13,32 @@ interface ConfirmPresenceModalProps {
   emailConfirmed: string;
 }
 
+interface TripDetailsProps {
+  destination: string;
+  starts_at: string;
+  ends_at: string;
+}
+
 export function ConfirmPresenceModal({
   closeConfirmPresenceModal,
   confirmParticipantPresence,
   setEmailConfirmed,
   emailConfirmed,
 }: ConfirmPresenceModalProps) {
+  const { tripId } = useParams();
+  const [trip, setTrip] = useState<TripDetailsProps>();
+
+  useEffect(() => {
+    api.get(`/trips/${tripId}`).then((response) => setTrip(response.data.trip));
+  }, [tripId]);
+
+  const startTripDate = trip?.starts_at ? format(trip.starts_at, "dd") : "";
+  const endTripDate = trip?.ends_at ? format(trip.ends_at, "dd") : "";
+  const month = trip?.starts_at
+    ? format(trip.starts_at, "MMMM", { locale: ptBR })
+    : "";
+  const year = trip?.starts_at ? format(trip.starts_at, "yyyy") : "";
+
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
       <div className="w-[640px] rounded-xl py-5 px-6 shadow-shape bg-zinc-900 space-y-5">
@@ -26,8 +50,9 @@ export function ConfirmPresenceModal({
             </button>
           </div>
           <p className="text-sm text-zinc-400">
-            Você foi convidado(a) para participar de uma viagem para
-            Florianópolis, Brasil nas datas de 16 a 27 de Agosto de 2024.
+            Você foi convidado(a) para participar de uma viagem para{" "}
+            {trip?.destination} nas datas de {startTripDate} a {endTripDate} de{" "}
+            {month} de {year}.
           </p>
           <p className="text-sm text-zinc-400">
             Para confirmar sua presença na viagem, preencha os dados abaixo.
