@@ -5,6 +5,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { api } from "../../lib/axios";
 import { ManageGuestsModal } from "./manage-guests-modal";
 import { ConfirmPresenceModal } from "./confirm-presence-modal";
+import { useToast } from "../../hooks/useToast";
 
 export interface ParticipantsProps {
   id: string;
@@ -19,6 +20,7 @@ export function Guests() {
   const [confirmPresenceModal, setConfirmPresenceModal] = useState(false);
   const [manageGuestsModal, setManageGuestsModal] = useState(false);
   const [emailConfirmed, setEmailConfirmed] = useState("");
+  const { showToast } = useToast();
 
   useEffect(() => {
     api
@@ -52,16 +54,23 @@ export function Guests() {
       return;
     }
 
-    const response = await api.post(`/trips/${tripId}/invites`, {
-      email,
-    });
-    const emailsToInvite = response.data;
+    try {
+      const response = await api.post(`/trips/${tripId}/invites`, {
+        email,
+      });
+      const emailsToInvite = response.data;
 
-    console.log(emailsToInvite);
+      setParticipants(emailsToInvite);
 
-    setParticipants(emailsToInvite);
-
-    window.document.location.reload();
+      showToast("✅", "E-mail successfully sent.");
+      window.document.location.reload();
+    } catch (error) {
+      showToast(
+        "❌",
+        "Error when sending the invitation email to a participant."
+      );
+      console.log(error);
+    }
   }
 
   function getParticipantByEmail(email: string) {
@@ -83,12 +92,20 @@ export function Guests() {
 
     const participantId = getParticipantByEmail(emailConfirmed);
 
-    const response = await api.get(`/participants/${participantId}/confirm`);
-    const updatedParticipant = response.data;
+    try {
+      const response = await api.get(`/participants/${participantId}/confirm`);
+      const updatedParticipant = response.data;
 
-    setParticipants(updatedParticipant);
+      setParticipants(updatedParticipant);
 
-    window.document.location.reload();
+      closeConfirmPresenceModal();
+
+      showToast("✅", "Participant confirmed successfully.");
+      window.location.reload();
+    } catch (error) {
+      showToast("❌", "Error when confirming travel participant.");
+      console.log(error);
+    }
   }
 
   return (

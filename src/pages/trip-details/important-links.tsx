@@ -4,6 +4,7 @@ import { RegisterLinkModal } from "./register-link-modal";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { api } from "../../lib/axios";
+import { useToast } from "../../hooks/useToast";
 
 interface ImportantLinkProps {
   id: string;
@@ -15,6 +16,7 @@ export function ImportantLinks() {
   const [isModalRegisterLink, setIsModalRegisterLink] = useState(false);
   const [links, setLinks] = useState<ImportantLinkProps[]>([]);
   const { tripId } = useParams();
+  const { showToast } = useToast();
 
   useEffect(() => {
     api
@@ -32,6 +34,8 @@ export function ImportantLinks() {
 
   function copyLinkClipboard(url: string) {
     navigator.clipboard.writeText(url);
+
+    showToast("✅", "Link copied successfully.");
   }
 
   return (

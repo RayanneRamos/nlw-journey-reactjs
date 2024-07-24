@@ -3,6 +3,7 @@ import { Button } from "../../components/button";
 import { FormEvent } from "react";
 import { api } from "../../lib/axios";
 import { useParams } from "react-router-dom";
+import { useToast } from "../../hooks/useToast";
 
 interface RegisterLinkModalProps {
   closeModalRegisterLink: () => void;
@@ -12,6 +13,7 @@ export function RegisterLinkModal({
   closeModalRegisterLink,
 }: RegisterLinkModalProps) {
   const { tripId } = useParams();
+  const { showToast } = useToast();
 
   async function createAnImportantLink(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -20,12 +22,18 @@ export function RegisterLinkModal({
     const title = data.get("title")?.toString();
     const url = data.get("url")?.toString();
 
-    await api.post(`/trips/${tripId}/links`, {
-      title,
-      url,
-    });
+    try {
+      await api.post(`/trips/${tripId}/links`, {
+        title,
+        url,
+      });
 
-    window.document.location.reload();
+      showToast("✅", "Link successfully registered.");
+      window.document.location.reload();
+    } catch (error) {
+      showToast("❌", "Error creating a link.");
+      console.log(error);
+    }
   }
 
   return (

@@ -6,6 +6,7 @@ import { DestinationAndDateStep } from "./steps/destination-and-date-step";
 import { InviteGuestsStep } from "./steps/invite-guests-step";
 import { DateRange } from "react-day-picker";
 import { api } from "../../lib/axios";
+import { useToast } from "../../hooks/useToast";
 
 export function CreateTripPage() {
   const [isGuestsInputOpen, setIsGuestsInputOpen] = useState(false);
@@ -21,6 +22,7 @@ export function CreateTripPage() {
   const [eventStartAndEndDates, setEventStartAndEndDates] = useState<
     DateRange | undefined
   >();
+  const { showToast } = useToast();
 
   function openGuestsInput() {
     setIsGuestsInputOpen(true);
@@ -55,6 +57,8 @@ export function CreateTripPage() {
     setEmailsToInvite([...emailsToInvite, email]);
 
     event.currentTarget.reset();
+
+    showToast("✅", "E-mail added successfully.");
   }
 
   function removeEmailFromInvites(emailToRemove: string) {
@@ -63,6 +67,8 @@ export function CreateTripPage() {
     );
 
     setEmailsToInvite(newEmailList);
+
+    showToast("✅", "E-mail removed.");
   }
 
   function openConfirmTripModal() {
@@ -92,18 +98,24 @@ export function CreateTripPage() {
       return;
     }
 
-    const response = await api.post("/trips", {
-      destination,
-      starts_at: eventStartAndEndDates.from,
-      ends_at: eventStartAndEndDates.to,
-      emails_to_invite: emailsToInvite,
-      owner_name: ownerName,
-      owner_email: ownerEmail,
-    });
+    try {
+      const response = await api.post("/trips", {
+        destination,
+        starts_at: eventStartAndEndDates.from,
+        ends_at: eventStartAndEndDates.to,
+        emails_to_invite: emailsToInvite,
+        owner_name: ownerName,
+        owner_email: ownerEmail,
+      });
 
-    const { tripId } = response.data;
+      const { tripId } = response.data;
+      showToast("✅", "The trip was created successfully.");
 
-    navigate(`/trips/${tripId}`);
+      navigate(`/trips/${tripId}`);
+    } catch (error) {
+      showToast("❌", "Error creating trip.");
+      console.log(error);
+    }
   }
 
   return (

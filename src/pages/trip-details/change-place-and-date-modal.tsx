@@ -5,6 +5,7 @@ import { FormEvent, useState } from "react";
 import { format } from "date-fns";
 import { api } from "../../lib/axios";
 import { useParams } from "react-router-dom";
+import { useToast } from "../../hooks/useToast";
 
 interface ChangePlaceAndDateModalProps {
   closeChangePlaceAndDateModal: () => void;
@@ -20,6 +21,7 @@ export function ChangePlaceAndDateModal({
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [newDestination, setNewDestination] = useState("");
   const { tripId } = useParams();
+  const { showToast } = useToast();
 
   function openDatePicker() {
     setIsDatePickerOpen(true);
@@ -36,13 +38,19 @@ export function ChangePlaceAndDateModal({
     const starts_at = eventStartAndEndDates?.from;
     const ends_at = eventStartAndEndDates?.to;
 
-    await api.put(`/trips/${tripId}`, {
-      destination,
-      starts_at,
-      ends_at,
-    });
+    try {
+      await api.put(`/trips/${tripId}`, {
+        destination,
+        starts_at,
+        ends_at,
+      });
+      showToast("✅", "Location and date changed successfully.");
 
-    window.document.location.reload();
+      window.document.location.reload();
+    } catch (error) {
+      showToast("❌", "Error when modifying travel location and date.");
+      console.log(error);
+    }
   }
 
   const displayedDate =

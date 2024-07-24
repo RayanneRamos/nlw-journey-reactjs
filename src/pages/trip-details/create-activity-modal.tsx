@@ -3,6 +3,7 @@ import { Button } from "../../components/button";
 import { FormEvent } from "react";
 import { api } from "../../lib/axios";
 import { useParams } from "react-router-dom";
+import { useToast } from "../../hooks/useToast";
 
 interface CreateActivityModalProps {
   closeCreateActivityModal: () => void;
@@ -12,6 +13,7 @@ export function CreateActivityModal({
   closeCreateActivityModal,
 }: CreateActivityModalProps) {
   const { tripId } = useParams();
+  const { showToast } = useToast();
 
   async function createActivity(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -20,12 +22,17 @@ export function CreateActivityModal({
     const title = data.get("title")?.toString();
     const occurs_at = data.get("occurs_at")?.toString();
 
-    await api.post(`/trips/${tripId}/activities`, {
-      title,
-      occurs_at,
-    });
+    try {
+      await api.post(`/trips/${tripId}/activities`, {
+        title,
+        occurs_at,
+      });
+      showToast("✅", "Activity created successfully.");
 
-    window.document.location.reload();
+      window.document.location.reload();
+    } catch (error) {
+      showToast("❌", "Error creating activity.");
+    }
   }
 
   return (
