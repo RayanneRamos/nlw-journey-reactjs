@@ -25,7 +25,7 @@
 5. **Visualização e acompanhamento do itinerário**
 
 
-## 🧪 Technologies
+## 🧪 Tecnologias
 
 Esse projeto foi desenvolvido com as seguintes tecnologias:
 
@@ -49,7 +49,7 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
   # ou
   $ yarn install
   # Execute a aplicação
-  $ npx expo start
+  $ npm run dev
   # ou
   $ yarn start
 ```
