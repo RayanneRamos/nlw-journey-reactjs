@@ -16,6 +16,15 @@
 
 [Plann.er](https://nlw-journey-reactjs-planner.vercel.app/) É uma aplicação intuitiva e completa para planejamento de viagens, projetada para facilitar a organização de todas as etapas de uma viagem, desde a escolha do destino até o convite de amigos e o cadastro de atividades. Com uma interface amigável e recursos integrados, o Plann.er ajuda a transformar qualquer viagem em uma experiência memorável e bem planejada.
 
+## 🌟 Funcionalidades
+
+1. **Definição de destino e datas da viagem** 
+2. **Convite de amigos para participar do planejamento**
+3. **Cadastro e organização de atividades**
+4. **Registro de links importantes para a viagem**
+5. **Visualização e acompanhamento do itinerário**
+
+
 ## 🧪 Technologies
 
 Esse projeto foi desenvolvido com as seguintes tecnologias:
